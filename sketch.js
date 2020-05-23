@@ -9,6 +9,9 @@ let button;
 let shipModels = [],
   shipModel, n = 0;
 let tex, shiptex;
+let cam;
+var gameover = 0;
+var score = 0;
 
 function preload() {
   odibeeSans = loadFont("OdibeeSans-Regular.ttf");
@@ -26,15 +29,18 @@ function mouseClicked() {
 }
 
 function setup() {
-  myCanvas = createCanvas(windowWidth * 0.9, windowHeight * 0.9, WEBGL);
-  perspective(PI / 2.0, width / height, 0.01, 50000);
+  myCanvas = createCanvas(windowWidth, 0.9*windowHeight, WEBGL);
+  cam = createCamera();
+  perspective(PI / 2, width / height, 0.01, 50000);
+  // debugMode();
+
   // setAttributes('antialias', true);
   colorMode(HSB);
   angleMode(DEGREES);
 
   //CREATE THE CUBE SPACE
   for (var i = 0; i < num_star; i++) {
-    var stars = new star(200, random() * 120 + 120, color(random(0, 80), random(80) + 20, random(20,100)));
+    var stars = new star(200, random() * 120 + 120, color(random(120, 180), random(80) + 20, random(20, 100)));
     allStars.push(stars);
   }
   // noCursor();
@@ -54,11 +60,16 @@ function touchEnded() {
 }
 
 function draw() {
+  cam.lookAt(0, 0, 0);
+  cam.setPosition(random(hitwig * 3) + (mouseX - width / 2) / 10, random(hitwig * 3) + (mouseY - height / 2) / 10, 700);
+
   // console.log(rotationX);
   // console.log("H=" + hitwig);
   // console.log("S=" + safeDur);
   background(0);
-  var score = frameCount;
+  if (gameover == 0) {
+    score++;
+  }
   safeDur = constrain(safeDur + 1, 0, 100); //MAKE COLLISION COUNT ONLY ONCE
   // elx = constrain(map(rotationY, -20, 20, 1, width), 1, width);//X POSITION
   // ely = constrain(map(rotationX, 10, 60, 1, height), 1, height);//Y POSITION
@@ -67,7 +78,7 @@ function draw() {
 
   // DRAW A SPACESHIP
   push();
-  translate(elx - width / 2 + random(hitwig / 5), ely - height / 2 + random(hitwig / 5), 500);
+  translate(elx - width / 2 + random(hitwig / 5), ely - height *0.55 + random(hitwig / 5), 500);
   rotateY(180);
   // rotateX(90);
   rotateZ((elx - width / 2) / 3 + 180);
@@ -82,11 +93,12 @@ function draw() {
   // scale(1, 1, 0.2);
   // cone(200, 100, 3, 1, 0);
   directionalLight(color(0, 0, 255), -1, 5, -1);
-    directionalLight(color(0, 0, 255), 0, 1, 5);
-  directionalLight(color(50, 50, 255), -1, 5, -1);
-  directionalLight(color(200, 50, 125),1, -5, -1);
+  directionalLight(color(0, 0, 255), 0, 1, 10);
+  directionalLight(color(20, 30, 155), -1, 5, -1);
+  directionalLight(color(200, 50, 55), 1, -5, -1);
   specularMaterial(100);
   texture(shiptex);
+  // sphere(200);
   model(shipModel);
   rotateX(-90);
   translate(0, 150, 0);
@@ -115,9 +127,10 @@ function draw() {
   pop();
 
 
+
   //COLLISION: CANVAS WIGGLE
   hitwig = constrain(hitwig - 1, 0, 75);
-  myCanvas.position(random(hitwig / 3) + 0.05 * windowWidth, random(hitwig / 3) + 0.05 * windowHeight);
+  myCanvas.position(0, 0.05 * windowHeight);
 
   for (var i = 0; i < allStars.length; i++) {
     // SHOW THE CUBESPACE
@@ -128,12 +141,13 @@ function draw() {
   }
   if (hitwig == 75 && hit > 5) {
     // Game Over & SCORE
-    noLoop();
-    clear();
-    background(0);
+    // noLoop();
+    // clear();
+    // background(0);
     fill(255);
     textFont(odibeeSans);
     textAlign(CENTER);
+    translate(0,0,-200);
     textSize(200);
     text('GAME OVER', 0, -200);
     textSize(100);
@@ -152,7 +166,10 @@ function draw() {
 
 function restt() {
   // Restart Button
-  location.reload();
+  gameover = 0;
+  button.hide();
+  score = 0;
+  // loop();
 }
 
 function star(_speed, _size, _color) {
@@ -165,15 +182,23 @@ function star(_speed, _size, _color) {
   var zpos = this.z;
   var spd = this.speed;
   this.acc = function () {
-    spd += 0.1; //acceleration
+    if (gameover == 0) {
+      spd += 0.1; //acceleration
+    }
   }
   this.move = function () {
-    if (zpos < 0) {
-      zpos += spd; //CUBE MOVE
-    } else {
-      this.x = random(-8, 8) * windowWidth;
-      this.y = random(-8, 8) * windowHeight;
-      zpos -= 50000; //CUBE WILL REBORN AT RANDOM POSITION
+    if (gameover == 0) {
+      if (zpos < 0) {
+        zpos += spd; //CUBE MOVE
+      } else {
+        this.x = random(-8, 8) * windowWidth;
+        this.y = random(-8, 8) * windowHeight;
+        zpos -= 50000; //CUBE WILL REBORN AT RANDOM POSITION
+      }
+    }
+    if (hitwig == 75 && hit > 5) {
+      gameover = 1;
+      spd = this.speed;
     }
   }
   var randomAngle = random(360); //RANDOM CUBE ORIENTATION
@@ -193,6 +218,7 @@ function star(_speed, _size, _color) {
     box(this.size);
 
     //COLLISION: CACULATE DISTANCE BETWEEN SPACESHIP & CUBES
+    if(gameover==0){
     var dis = dist(this.x, this.y, zpos, elx - width / 2, ely - height / 2, 0);
     if (dis < 250 && safeDur > 35) {
       hit++;
@@ -200,6 +226,7 @@ function star(_speed, _size, _color) {
       safeDur -= 49; //COLLISION SHOULD COUNTED ONLY ONCE
       console.log(hit);
     }
+  }
     pop();
   }
 }
