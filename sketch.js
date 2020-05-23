@@ -8,10 +8,11 @@ var safeDur = 50;
 let button;
 let shipModels = [],
   shipModel, n = 0;
-let tex;
+let tex, shiptex;
 
 function preload() {
   odibeeSans = loadFont("OdibeeSans-Regular.ttf");
+
   for (var i = 1; i < 7; i++) {
     var models = loadModel("./spaceship" + i + ".obj", true);
     shipModels.push(models);
@@ -33,13 +34,15 @@ function setup() {
 
   //CREATE THE CUBE SPACE
   for (var i = 0; i < num_star; i++) {
-    var stars = new star(200, random() * 120 + 120, color(random(220, 280), random(40) + 40, 100));
+    var stars = new star(200, random() * 120 + 120, color(random(0, 80), random(80) + 20, random(20,100)));
     allStars.push(stars);
   }
   // noCursor();
   frameRate(60);
-  tex = createGraphics(200, 200);
-  tex.background(255);
+  shiptex = loadImage("./DefaultMaterial_Base_Color.jpg");
+  // tex = createGraphics(1000, 1000);
+  // tex.background(255);
+  // tex.image(shiptex,1000,1000);
 }
 
 function touchMoved() {
@@ -61,44 +64,46 @@ function draw() {
   // ely = constrain(map(rotationX, 10, 60, 1, height), 1, height);//Y POSITION
   elx = mouseX;
   ely = mouseY;
-  if (keyIsDown(32)) {
-    debugMode();
-  }
+
   // DRAW A SPACESHIP
   push();
   translate(elx - width / 2 + random(hitwig / 5), ely - height / 2 + random(hitwig / 5), 500);
   rotateY(180);
   // rotateX(90);
-  rotateZ((elx - width / 2) / 10);
+  rotateZ((elx - width / 2) / 3 + 180);
   // stroke(frameCount % 360, 255, 255);
   stroke(0);
   strokeWeight(1);
+
   // noFill();
   // scale(1, 1, 0.5);
   // cone(50, 300, 3, 1, 0);
   translate(0, -50, 0);
   // scale(1, 1, 0.2);
   // cone(200, 100, 3, 1, 0);
-  directionalLight(color(0, 0, 250), -1, 5, -1);
+  directionalLight(color(0, 0, 255), -1, 5, -1);
+    directionalLight(color(0, 0, 255), 0, 1, 5);
+  directionalLight(color(50, 50, 255), -1, 5, -1);
+  directionalLight(color(200, 50, 125),1, -5, -1);
   specularMaterial(100);
-  texture(tex);
+  texture(shiptex);
   model(shipModel);
   rotateX(-90);
   translate(0, 150, 0);
   noStroke();
   blendMode(SCREEN);
   emissiveMaterial(15, 230, 155);
-  cone(10 + random(-3, 3), 200, 30, 1, 0);
-    translate(-20, 0, 0);
-  cone(6 + random(-3, 3), 200, 30, 1, 0);
-      translate(40, 0, 0);
-  cone(6 + random(-3, 3), 200, 30, 1, 0);
-  blendMode(NORMAL);
+  cone(10 + random(-3, 3), 200, 24, 1, 0);
+  translate(-20, 0, 0);
+  cone(6 + random(-3, 3), 200, 24, 1, 0);
+  translate(40, 0, 0);
+  cone(6 + random(-3, 3), 200, 24, 1, 0);
+  blendMode(BLEND);
   pop();
 
   //HP & SCORE
   push();
-  translate((elx - width / 2)*2, (ely - height / 2)*2, -200);
+  translate((elx - width / 2) * 2, (ely - height / 2) * 2, -200);
   fill(255);
   rect(400, 0, 15, hitwig * 5 - 375);
   textFont(odibeeSans);
@@ -112,7 +117,7 @@ function draw() {
 
   //COLLISION: CANVAS WIGGLE
   hitwig = constrain(hitwig - 1, 0, 75);
-  myCanvas.position(random(hitwig / 3) + 0.025 * windowWidth, random(hitwig / 3) + 0.025 * windowWidth);
+  myCanvas.position(random(hitwig / 3) + 0.05 * windowWidth, random(hitwig / 3) + 0.05 * windowHeight);
 
   for (var i = 0; i < allStars.length; i++) {
     // SHOW THE CUBESPACE
