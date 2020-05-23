@@ -25,7 +25,7 @@ function mouseClicked() {
 }
 
 function setup() {
-  myCanvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  myCanvas = createCanvas(windowWidth * 0.9, windowHeight * 0.9, WEBGL);
   perspective(PI / 2.0, width / height, 0.01, 50000);
   // setAttributes('antialias', true);
   colorMode(HSB);
@@ -66,7 +66,7 @@ function draw() {
   }
   // DRAW A SPACESHIP
   push();
-  translate(elx - width / 2 + random(hitwig / 3), ely - height / 2 + random(hitwig / 3), 500);
+  translate(elx - width / 2 + random(hitwig / 5), ely - height / 2 + random(hitwig / 5), 500);
   rotateY(180);
   // rotateX(90);
   rotateZ((elx - width / 2) / 10);
@@ -79,15 +79,26 @@ function draw() {
   translate(0, -50, 0);
   // scale(1, 1, 0.2);
   // cone(200, 100, 3, 1, 0);
-  directionalLight(color(0, 0, 250), -1,5,-1);
+  directionalLight(color(0, 0, 250), -1, 5, -1);
   specularMaterial(100);
   texture(tex);
   model(shipModel);
+  rotateX(-90);
+  translate(0, 150, 0);
+  noStroke();
+  blendMode(SCREEN);
+  emissiveMaterial(15, 230, 155);
+  cone(10 + random(-3, 3), 200, 30, 1, 0);
+    translate(-20, 0, 0);
+  cone(6 + random(-3, 3), 200, 30, 1, 0);
+      translate(40, 0, 0);
+  cone(6 + random(-3, 3), 200, 30, 1, 0);
+  blendMode(NORMAL);
   pop();
 
   //HP & SCORE
   push();
-  translate(elx - width / 2, ely - height / 2, -200);
+  translate((elx - width / 2)*2, (ely - height / 2)*2, -200);
   fill(255);
   rect(400, 0, 15, hitwig * 5 - 375);
   textFont(odibeeSans);
@@ -100,8 +111,8 @@ function draw() {
 
 
   //COLLISION: CANVAS WIGGLE
-  hitwig = constrain(hitwig - 0.3, 0, 75);
-  myCanvas.position(random(hitwig / 3), random(hitwig / 3));
+  hitwig = constrain(hitwig - 1, 0, 75);
+  myCanvas.position(random(hitwig / 3) + 0.025 * windowWidth, random(hitwig / 3) + 0.025 * windowWidth);
 
   for (var i = 0; i < allStars.length; i++) {
     // SHOW THE CUBESPACE
@@ -114,8 +125,8 @@ function draw() {
     // Game Over & SCORE
     noLoop();
     clear();
-    background(255);
-    fill(0);
+    background(0);
+    fill(255);
     textFont(odibeeSans);
     textAlign(CENTER);
     textSize(200);
