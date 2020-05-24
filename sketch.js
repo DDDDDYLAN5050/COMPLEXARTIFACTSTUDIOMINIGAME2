@@ -159,7 +159,7 @@ function draw() {
     button.style('font-size', 300);
     button.style('margin', 'auto');
     button.style('width', '25%');
-    button.position(width * 0.375, height / 2 + 300);
+    button.position(width * 0.375, height / 2);
     button.mousePressed(restt);
   }
 }
