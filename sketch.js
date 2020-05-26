@@ -1,8 +1,7 @@
 var myStar;
 var num_star = 800;
 var allStars = [];
-var hit = 0;
-var hitwig = 0;
+var hit = 0, hitwig = 0;
 var odibeeSans;
 var safeDur = 50;
 let button;
