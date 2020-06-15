@@ -83,22 +83,30 @@ function draw() {
   cam.setPosition(random(hitwig) + (mouseX - width / 2) / 30, random(hitwig) + (mouseY - height / 2) / 30, 700);
   // myCanvas.background(backgroundImg);
   // image(backgroundImg,0,0);
-  blendMode(BLEND);
+
+  clear();
+
 
   push();
-  clear();
+
   noStroke();
   texture(backgroundImg);
   translate(0, 0, -28000);
   rectMode(CENTER);
   rect(0, 0, windowHeight * 80 * 16 / 9, windowHeight * 80);
   pop();
-
+  blendMode(BLEND);
+  fill(5, 0, 255, hitwig / 40);
+  rectMode(CENTER);
+  rect(0,0,windowWidth*2,windowHeight*2);
   // console.log(rotationX);
   // console.log("H=" + hitwig);
   // console.log("S=" + safeDur);
   // background(0);
   if (gameover == 0) {
+    if (frameCount % 300 == 0 && hit > 0) {
+      hit = hit - 1;
+    }
     score++;
   }
   safeDur = constrain(safeDur + 1, 0, 100); //MAKE COLLISION COUNT ONLY ONCE
@@ -137,18 +145,18 @@ function draw() {
   noStroke();
   blendMode(SCREEN);
   emissiveMaterial(25, 230, 155);
-  cone(10 + random(-2, 2), 200, 24, 1, 0);
+  cone(8 + random(-2, 2), 200, 24, 1, 0);
   translate(-20, 0, 0);
-  cone(6 + random(-2, 2), 200, 24, 1, 0);
+  cone(5 + random(-2, 2), 200, 24, 1, 0);
   translate(40, 0, 0);
-  cone(6 + random(-2, 2), 200, 24, 1, 0);
+  cone(5 + random(-2, 2), 200, 24, 1, 0);
   blendMode(BLEND);
   pop();
 
   //HP & SCORE
   push();
-  translate((elx - width / 2) * 2, (ely - height / 2) * 2, -200);
-  fill(255);
+  translate((elx - width / 2) * 2.5, (ely - height / 2) * 2.5, -200);
+  fill(160, 100, 255);
   rect(400, 0, 15, hit * 25 - 375);
   textFont(odibeeSans);
   textSize(100);
@@ -229,8 +237,8 @@ function star(_speed, _size, _color, _image) {
       if (zpos < 0) {
         zpos += spd; //CUBE MOVE
       } else {
-        this.x = random(-5, 5) * windowWidth;
-        this.y = random(-5, 5) * windowHeight;
+        this.x = random(-6, 6) * windowWidth;
+        this.y = random(-6, 6) * windowHeight;
         zpos -= 50000; //CUBE WILL REBORN AT RANDOM POSITION
       }
     }
@@ -263,7 +271,7 @@ function star(_speed, _size, _color, _image) {
     //COLLISION: CACULATE DISTANCE BETWEEN SPACESHIP & CUBES
     if (gameover == 0) {
       var dis = dist(this.x, this.y, zpos, elx - width / 2, ely - height / 2, -500);
-      if (dis < 360 && safeDur > 35) {
+      if (dis < 300 && safeDur > 35) {
         hit++;
         hitwig += spd / 10;
         safeDur -= 49; //COLLISION SHOULD COUNTED ONLY ONCE
