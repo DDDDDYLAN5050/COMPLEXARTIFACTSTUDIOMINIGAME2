@@ -13,9 +13,10 @@ let cam;
 var gameover = 0;
 var score = 0;
 var trashImg = [],
-  targetImg = [];
+  targetImg;
 var backgroundImg;
-var target1;
+var target1, z = 40000,
+  tx, ty;
 
 function preload() {
   odibeeSans = loadFont("OdibeeSans-Regular.ttf");
@@ -24,10 +25,13 @@ function preload() {
     var trash = loadImage("./assets/trash" + j + ".png");
     trashImg.push(trash);
   }
-  for (var k = 1; j < 4; j++) {
-    var target = loadImage("./assets/target" + k + ".png");
-    targetImg.push(target);
-  }
+
+  targetImg = loadImage("./assets/target1.png");
+
+  // for (var k = 1; j < 4; j++) {
+  // var target = loadImage("./assets/target" + k + ".png");
+  // targetImg.push(target);
+  // }
   for (var i = 1; i < 7; i++) {
     var models = loadModel("./spaceship" + i + ".obj", true);
     shipModels.push(models);
@@ -41,7 +45,7 @@ function preload() {
 // }
 
 function setup() {
-  myCanvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  createCanvas(windowWidth, windowHeight, WEBGL);
   cam = createCamera();
   perspective(PI / 2.2, width / height, 0.01, 35000);
   // debugMode();
@@ -50,6 +54,8 @@ function setup() {
   colorMode(HSB);
   angleMode(DEGREES);
 
+  tx = random(-0.25, 0.25) * width;
+  ty = random(-0.25, 0.25) * height;
 
   //CREATE THE CUBE SPACE
   for (var i = 0; i < num_star; i++) {
@@ -98,7 +104,7 @@ function draw() {
   blendMode(BLEND);
   fill(5, 0, 255, hitwig / 40);
   rectMode(CENTER);
-  rect(0,0,windowWidth*2,windowHeight*2);
+  rect(0, 0, windowWidth * 2, windowHeight * 2);
   // console.log(rotationX);
   // console.log("H=" + hitwig);
   // console.log("S=" + safeDur);
@@ -157,7 +163,7 @@ function draw() {
   push();
   translate((elx - width / 2) * 2.5, (ely - height / 2) * 2.5, -200);
   fill(160, 100, 255);
-  rect(400, 0, 15, hit * 25 - 375);
+  rect(400, -150, 25, hit * 25 - 375);
   textFont(odibeeSans);
   textSize(100);
   textAlign(RIGHT);
@@ -170,7 +176,7 @@ function draw() {
 
   //COLLISION: CANVAS WIGGLE
   hitwig = constrain(hitwig - 3, 0, 75);
-  myCanvas.position(0, 0.0 * windowHeight);
+  // myCanvas.position(0, 0.0 * windowHeight);
 
   // target1.move();
   // target1.display();
@@ -183,6 +189,26 @@ function draw() {
     b.display();
     b.acc();
   }
+
+  push();
+  if (score > 800) {
+    z -= 150;
+  }
+  translate(0, 0, -z);
+  rotateZ(frameCount / 5);
+  // texture(targetImg[0]);
+  // rect(random(-0.4, 0.4) * windowWidth, random(-0.4, 0.4) * windowHeight, 500, 500);
+  imageMode(CENTER);
+  // scale(4,4);
+  image(targetImg, tx, ty);
+  if (z < 800 && z > -800) {
+    if (dist(tx, ty, z, elx, ely, 0) < 400) {
+
+    }
+  }
+  pop();
+
+
   if (hit == 15) {
     gameover = 1;
     // Game Over & SCORE
