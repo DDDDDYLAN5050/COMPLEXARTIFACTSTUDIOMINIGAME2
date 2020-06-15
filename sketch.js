@@ -195,16 +195,18 @@ function draw() {
     z -= 150;
   }
   translate(0, 0, -z);
-  rotateZ(frameCount / 5);
+  rotateZ(frameCount);
   // texture(targetImg[0]);
   // rect(random(-0.4, 0.4) * windowWidth, random(-0.4, 0.4) * windowHeight, 500, 500);
   imageMode(CENTER);
   // scale(4,4);
   image(targetImg, tx, ty);
-  if (z < 800 && z > -800) {
-    if (dist(tx, ty, z, elx, ely, 0) < 400) {
-
-    }
+  if (z < 0) {
+    // if (dist(tx, ty, mouseX, mouseY) < 500) {
+      // hitwig=100;
+      console.log("target1");
+      select(".target1").style("background", "#00ffaa88");
+    // }
   }
   pop();
 
