@@ -1,7 +1,8 @@
 var myStar;
 var num_star = 800;
 var allStars = [];
-var hit = 0, hitwig = 0;
+var hit = 0,
+  hitwig = 0;
 var odibeeSans;
 var safeDur = 50;
 let button;
@@ -11,24 +12,31 @@ let tex, shiptex;
 let cam;
 var gameover = 0;
 var score = 0;
+var trashImg = [];
+var backgroundImg;
 
 function preload() {
   odibeeSans = loadFont("OdibeeSans-Regular.ttf");
+  backgroundImg = loadImage("./assets/background.png");
+  for (var j = 1; j < 14; j++) {
+    var trash = loadImage("./assets/trash" + j + ".png");
+    trashImg.push(trash);
+  }
 
   for (var i = 1; i < 7; i++) {
     var models = loadModel("./spaceship" + i + ".obj", true);
     shipModels.push(models);
   }
-  shipModel = shipModels[0];
+  shipModel = shipModels[1];
 }
 
-function mouseClicked() {
-  n = (n + 1) % 6;
-  shipModel = shipModels[n];
-}
+// function mouseClicked() {
+//   n = (n + 1) % 6;
+//   shipModel = shipModels[n];
+// }
 
 function setup() {
-  myCanvas = createCanvas(windowWidth, 0.9*windowHeight, WEBGL);
+  myCanvas = createCanvas(windowWidth,  windowHeight, WEBGL);
   cam = createCamera();
   perspective(PI / 2, width / height, 0.01, 50000);
   // debugMode();
@@ -37,9 +45,10 @@ function setup() {
   colorMode(HSB);
   angleMode(DEGREES);
 
+
   //CREATE THE CUBE SPACE
   for (var i = 0; i < num_star; i++) {
-    var stars = new star(200, random() * 120 + 120, color(random(120, 180), random(80) + 20, random(20, 100)));
+    var stars = new star(200, random() * 120 + 120, color(random(120, 180), random(80) + 20, random(20, 100)), random(trashImg));
     allStars.push(stars);
   }
   // noCursor();
@@ -48,6 +57,7 @@ function setup() {
   // tex = createGraphics(1000, 1000);
   // tex.background(255);
   // tex.image(shiptex,1000,1000);
+
 }
 
 function touchMoved() {
@@ -60,12 +70,24 @@ function touchEnded() {
 
 function draw() {
   cam.lookAt(0, 0, 0);
-  cam.setPosition(random(hitwig * 3) + (mouseX - width / 2) / 10, random(hitwig * 3) + (mouseY - height / 2) / 10, 700);
+  cam.setPosition(random(hitwig * 3) + (mouseX - width / 2) / 30, random(hitwig * 3) + (mouseY - height / 2) / 30, 700);
+  // myCanvas.background(backgroundImg);
+  // image(backgroundImg,0,0);
+  blendMode(BLEND);
+// background(lerpColor(color("#4e035b"), color("#08002a"), mouseY / height));
+  push();
+  clear();
+  noStroke();
+  texture(backgroundImg);
+  translate(0,0,-28000);
+  rectMode(CENTER);
+  rect(0,0,windowWidth*100,windowHeight*100);
+pop();
 
   // console.log(rotationX);
   // console.log("H=" + hitwig);
   // console.log("S=" + safeDur);
-  background(0);
+  // background(0);
   if (gameover == 0) {
     score++;
   }
@@ -77,7 +99,7 @@ function draw() {
 
   // DRAW A SPACESHIP
   push();
-  translate(elx - width / 2 + random(hitwig / 5), ely - height *0.55 + random(hitwig / 5), 500);
+  translate(elx - width / 2 + random(hitwig / 5), ely - height * 0.55 + random(hitwig / 5), 500);
   rotateY(180);
   // rotateX(90);
   rotateZ((elx - width / 2) / 3 + 180);
@@ -91,10 +113,10 @@ function draw() {
   translate(0, -50, 0);
   // scale(1, 1, 0.2);
   // cone(200, 100, 3, 1, 0);
-  directionalLight(color(0, 0, 255), -1, 5, -1);
-  directionalLight(color(0, 0, 255), 0, 1, 10);
-  directionalLight(color(20, 30, 155), -1, 5, -1);
-  directionalLight(color(200, 50, 55), 1, -5, -1);
+  directionalLight(color(0, 0, 255), 10, 5, 10);
+  directionalLight(color(0, 0, 255), 10, 5, 10);
+  directionalLight(color(20, 30, 155), 10, 5, 10);
+  directionalLight(color(200, 50, 55), -10, 5, -10);
   specularMaterial(100);
   texture(shiptex);
   // sphere(200);
@@ -129,7 +151,7 @@ function draw() {
 
   //COLLISION: CANVAS WIGGLE
   hitwig = constrain(hitwig - 1, 0, 75);
-  myCanvas.position(0, 0.05 * windowHeight);
+  myCanvas.position(0, 0.0 * windowHeight);
 
   for (var i = 0; i < allStars.length; i++) {
     // SHOW THE CUBESPACE
@@ -146,7 +168,7 @@ function draw() {
     fill(255);
     textFont(odibeeSans);
     textAlign(CENTER);
-    translate(0,0,-200);
+    translate(0, 0, -200);
     textSize(200);
     text('GAME OVER', 0, -200);
     textSize(100);
@@ -171,7 +193,7 @@ function restt() {
   // loop();
 }
 
-function star(_speed, _size, _color) {
+function star(_speed, _size, _color, _image) {
   this.x = random(-8, 8) * windowWidth;
   this.y = random(-8, 8) * windowHeight;
   this.z = random(-50000);
@@ -210,22 +232,23 @@ function star(_speed, _size, _color) {
     translate(this.x, this.y, zpos);
 
     //CUBES ROTATE
-    rotateX(frameCount + randomAngle);
-    rotateY(frameCount + randomAngle);
+    rotateX(frameCount / 10 + randomAngle);
+    rotateY(frameCount / 10 + randomAngle);
 
     //CREATE CUBE
-    box(this.size);
+    // box(this.size);
+    image(_image, 0, 0);
 
     //COLLISION: CACULATE DISTANCE BETWEEN SPACESHIP & CUBES
-    if(gameover==0){
-    var dis = dist(this.x, this.y, zpos, elx - width / 2, ely - height / 2, 0);
-    if (dis < 250 && safeDur > 35) {
-      hit++;
-      hitwig += spd / 10;
-      safeDur -= 49; //COLLISION SHOULD COUNTED ONLY ONCE
-      console.log(hit);
+    if (gameover == 0) {
+      var dis = dist(this.x, this.y, zpos, elx - width / 2, ely - height / 2, 0);
+      if (dis < 250 && safeDur > 35) {
+        hit++;
+        hitwig += spd / 10;
+        safeDur -= 49; //COLLISION SHOULD COUNTED ONLY ONCE
+        console.log(hit);
+      }
     }
-  }
     pop();
   }
 }
