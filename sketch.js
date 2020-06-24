@@ -264,7 +264,7 @@ function draw() {
   if (score > 2000) {
     console.log("targetscore");
     select(".targetscore").style("background", "#00ffaa88");
-    zzz= (score-2020)*(score-2020)-400;
+    zzz= ((score-2050)*(score-2050)-2500)/5;
     hit=0;
     fill(255);
     textFont(odibeeSans);
@@ -272,7 +272,7 @@ function draw() {
     textSize(200);
     text('MISSION SUCCESS', 0, 0);
   }
-  if (score > 2150) {
+  if (score > 2200) {
     select("#defaultCanvas0").hide();
     select(".container").hide();
     gameover = 1;
