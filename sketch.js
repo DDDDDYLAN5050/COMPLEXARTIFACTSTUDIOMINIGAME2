@@ -13,10 +13,13 @@ let cam;
 var gameover = 0;
 var score = 0;
 var trashImg = [],
-  targetImg;
+  targetImg1, targetImg2, targetImg3;
 var backgroundImg;
-var target1, z = 40000,
-  tx, ty;
+var target1, target2, target3, z = 40000,
+  z2 = 40000,
+  z3 = 40000,
+  tx, ty, tx2, ty2, tx3, ty3;
+var zzz=0;
 
 function preload() {
   odibeeSans = loadFont("OdibeeSans-Regular.ttf");
@@ -26,11 +29,13 @@ function preload() {
     trashImg.push(trash);
   }
 
-  targetImg = loadImage("./assets/target1.png");
+  targetImg1 = loadImage("./assets/target1.png");
+  targetImg2 = loadImage("./assets/target2.png");
+  targetImg3 = loadImage("./assets/target3.png");
 
   // for (var k = 1; j < 4; j++) {
   // var target = loadImage("./assets/target" + k + ".png");
-  // targetImg.push(target);
+  // targetImg1.push(target);
   // }
   for (var i = 1; i < 7; i++) {
     var models = loadModel("./spaceship" + i + ".obj", true);
@@ -56,14 +61,17 @@ function setup() {
 
   tx = random(-0.25, 0.25) * width;
   ty = random(-0.25, 0.25) * height;
-
+  tx2 = random(-0.25, 0.25) * width;
+  ty2 = random(-0.25, 0.25) * height;
+  tx3 = random(-0.25, 0.25) * width;
+  ty3 = random(-0.25, 0.25) * height;
   //CREATE THE CUBE SPACE
   for (var i = 0; i < num_star; i++) {
     var stars = new star(200, random() * 120 + 120, color(random(120, 180), random(80) + 20, random(20, 100)), random(trashImg));
     allStars.push(stars);
   }
-  // target1 = new star(200, random() * 120 + 120, color(random(120, 180), random(80) + 20, random(20, 100)), targetImg[0]);
-  // target1 = new star(1, 200, color(200), targetImg[0]);
+  // target1 = new star(200, random() * 120 + 120, color(random(120, 180), random(80) + 20, random(20, 100)), targetImg1[0]);
+  // target1 = new star(1, 200, color(200), targetImg1[0]);
   // target1.x = random(-0.3, 0.3) * windowWidth;
   // target1.y = random(-0.3, 0.3) * windowHeight;
   // noCursor();
@@ -74,6 +82,8 @@ function setup() {
   // tex.image(shiptex,1000,1000);
   button = createButton('Restart');
   button.hide();
+  select(".blueprint").hide();
+  select(".success").hide();
 }
 
 function touchMoved() {
@@ -145,17 +155,18 @@ function draw() {
   specularMaterial(100);
   texture(shiptex);
   // sphere(200);
+  translate(0,0,zzz+200);
   model(shipModel);
   rotateX(-90);
-  translate(0, 150, 0);
+  translate(0, 300, 0);
   noStroke();
   blendMode(SCREEN);
   emissiveMaterial(25, 230, 155);
-  cone(8 + random(-2, 2), 200, 24, 1, 0);
+  cone(8 + random(-2, 2), 500, 24, 1, 0);
   translate(-20, 0, 0);
-  cone(5 + random(-2, 2), 200, 24, 1, 0);
+  cone(5 + random(-2, 2), 500, 24, 1, 0);
   translate(40, 0, 0);
-  cone(5 + random(-2, 2), 200, 24, 1, 0);
+  cone(5 + random(-2, 2), 500, 24, 1, 0);
   blendMode(BLEND);
   pop();
 
@@ -163,7 +174,7 @@ function draw() {
   push();
   translate((elx - width / 2) * 2.5, (ely - height / 2) * 2.5, -200);
   fill(160, 100, 255);
-  rect(400, -150, 25, hit * 25 - 375);
+  rect(400, -150, 25, hit * 75 - 375);
   textFont(odibeeSans);
   textSize(100);
   textAlign(RIGHT);
@@ -190,28 +201,86 @@ function draw() {
     b.acc();
   }
 
+  // target1
   push();
-  if (score > 800) {
+  if (score > 300) {
     z -= 150;
   }
   translate(0, 0, -z);
   rotateZ(frameCount);
-  // texture(targetImg[0]);
+  // texture(targetImg1[0]);
   // rect(random(-0.4, 0.4) * windowWidth, random(-0.4, 0.4) * windowHeight, 500, 500);
   imageMode(CENTER);
   // scale(4,4);
-  image(targetImg, tx, ty);
+  image(targetImg1, tx, ty);
   if (z < 0) {
     // if (dist(tx, ty, mouseX, mouseY) < 500) {
-      // hitwig=100;
-      console.log("target1");
-      select(".target1").style("background", "#00ffaa88");
+    // hitwig=100;
+    console.log("target1");
+    select(".target1").style("background", "#00ffaa88");
     // }
   }
   pop();
+  // target2
+  push();
+  if (score > 900) {
+    z2 -= 150;
+  }
+  translate(0, 0, -z2);
+  rotateZ(frameCount);
+  // texture(targetImg1[0]);
+  // rect(random(-0.4, 0.4) * windowWidth, random(-0.4, 0.4) * windowHeight, 500, 500);
+  imageMode(CENTER);
+  // scale(4,4);
+  image(targetImg2, tx2, ty2);
+  if (z2 < 0) {
+    // if (dist(tx, ty, mouseX, mouseY) < 500) {
+    // hitwig=100;
+    console.log("target2");
+    select(".target2").style("background", "#00ffaa88");
+    // }
+  }
+  pop();
+  // target3
+  push();
+  if (score > 1400) {
+    z3 -= 150;
+  }
+  translate(0, 0, -z3);
+  rotateZ(frameCount);
+  // texture(targetImg1[0]);
+  // rect(random(-0.4, 0.4) * windowWidth, random(-0.4, 0.4) * windowHeight, 500, 500);
+  imageMode(CENTER);
+  // scale(4,4);
+  image(targetImg3, tx3, ty3);
+  if (z3 < 0) {
+    // if (dist(tx, ty, mouseX, mouseY) < 500) {
+    // hitwig=100;
+    console.log("target3");
+    select(".target3").style("background", "#00ffaa88");
+    // }
+  }
+  pop();
+  if (score > 2000) {
+    console.log("targetscore");
+    select(".targetscore").style("background", "#00ffaa88");
+    zzz= (score-2020)*(score-2020)-400;
+    hit=0;
+    fill(255);
+    textFont(odibeeSans);
+    textAlign(CENTER);
+    textSize(200);
+    text('MISSION SUCCESS', 0, 0);
+  }
+  if (score > 2150) {
+    select("#defaultCanvas0").hide();
+    select(".container").hide();
+    gameover = 1;
+    select(".blueprint").show();
+    select(".success").show();
+  }
 
-
-  if (hit == 15) {
+  if (hit == 5) {
     gameover = 1;
     // Game Over & SCORE
     // noLoop();
@@ -257,7 +326,7 @@ function star(_speed, _size, _color, _image) {
   var spd = this.speed;
   this.acc = function () {
     if (gameover == 0) {
-      spd += 0.1; //acceleration
+      spd += 0.3; //acceleration
     }
   }
   this.move = function () {
@@ -270,7 +339,7 @@ function star(_speed, _size, _color, _image) {
         zpos -= 50000; //CUBE WILL REBORN AT RANDOM POSITION
       }
     }
-    if (hit == 15) {
+    if (hit == 5) {
       gameover = 1;
       spd = this.speed;
     }

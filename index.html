@@ -6,14 +6,20 @@
   <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
   <style>
     html {
-      background-color: black;
+      /* background-color: black; */
+      background-image: url("./assets/space-01.png");
+      background-repeat: no-repeat;
+      /* Do not repeat the image */
+      background-size: cover;
+      /* Resize the background image to cover the entire container */
     }
 
     body {
       padding: 0;
       margin: 0;
     }
-    .container{
+
+    .container {
       position: absolute;
       text-align: center;
       top: 5%;
@@ -21,13 +27,59 @@
       width: 15%;
       background-color: #00ffaa22;
     }
-    h1{
+
+    h1 {
       color: white;
       font-family: sans-serif;
     }
-    div{
-      color: white;
 
+    div {
+      color: white;
+      /* outline-color: white; */
+    }
+
+    .blueprint {
+      margin: auto;
+      position: absolute;
+      text-align: left;
+      vertical-align: middle;
+      /* top: 0%;
+      bottom: 0%; */
+      width: 50%;
+      height: 100%;
+      left: 50%;
+    }
+
+    .success {
+      /* margin: auto; */
+      position: absolute;
+      text-align: center;
+      vertical-align: middle;
+      /* display: flex; */
+      justify-content: nowrap;
+      top: 50%;
+      transform: translate(0, -50%);
+      /* bottom: 0; */
+      margin: auto;
+      width: 50%;
+      /* height: 100%; */
+      left: 0%;
+      font-size: 2vh;
+    }
+    button {
+      color: rgb(23,26,50);
+      outline-width: thick;
+      outline-color: #00ffaa;
+    }
+    a {
+      font-size: 3vh;
+      color: #00dd88;
+      text-decoration: underline;
+      background-color: rgb(23,26,50);
+    }
+    a:hover{
+      color: #00ffaa;
+      font-weight: bold;
     }
   </style>
   <link href="https://fonts.googleapis.com/css?family=Alata&display=swap" rel="stylesheet">
@@ -39,10 +91,24 @@
 
 <body>
   <div class="container">
-    <h1>TARGETS</h1>
-    <div class="target1" style="margin:5%;"><img src="./assets/target1.png" width="50%" height="auto"></br>FUSION BATTERY</div>
-    <div class="target2" style="margin:5%;"><img src="./assets/target2.png" width="50%" height="auto"></br>LASER GUN</div>
-    <div class="target3" style="margin:5%;"><img src="./assets/target3.png" width="50%" height="auto"></br>COLLECTOR</div>
+    <h2>TARGETS</h2>
+    <div class="target1" style="margin:5%;"><img src="./assets/target1.png" width="50%" height="auto"></br>
+      <h3>·FUSION BATTERY</h3>
+    </div>
+    <div class="target2" style="margin:5%;"><img src="./assets/target2.png" width="50%" height="auto"></br>
+      <h3>·COLLECTOR</h3>
+    </div>
+    <div class="target3" style="margin:5%;"><img src="./assets/target3.png" width="50%" height="auto"></br>
+      <h3>·LASER GUN</h3>
+    </div>
+    <h3 class="targetscore" style="margin:5%;">·Reach 2000 points</h3>
+  </div>
+
+  <div class="blueprint"> <img src="./assets/Recycleplant-01.png" alt="" width="auto" height="100%"></div>
+  <div class="success">
+    <H1>MISSION SUCCESS</H1>
+    <p>You have collected all the parts, next step -> -> -> </p></br>
+    <a href="http://www.divcss5.com" target="_self" >Construct the Recycle Plant</a>
   </div>
 </body>
 
